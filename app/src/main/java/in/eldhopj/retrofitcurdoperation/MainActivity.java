@@ -1,5 +1,6 @@
 package in.eldhopj.retrofitcurdoperation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -21,13 +22,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Commit 1: Sign Up using Retrofit POST Request
+ * Commit 1:Sign Up using Retrofit POST Request
  *          Create an API interface (Api)
  *          Create a Singleton class for defining the retrofit client(RetrofitClient)
  *          User create operation
  *              Parse the Json response with the help of a Model Class (GSON method)
  *              Parse the error Json response in traditional way
  *
+ * Commit 2: User Login
+ *          Create POST request for login (Api)
+ *          Store the user details in memory using shared prefs
+ *          Create Model class for parsing the Login response as well as for shared prefs (LoginResponse)
+ *          If user is already logged in autoLogin into profile activity
  *          */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -44,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
         editTextName = findViewById(R.id.editTextName);
         editTextSchool = findViewById(R.id.editTextSchool);
 
-        editTextEmail.getEditText().addTextChangedListener(watch);
         editTextName.getEditText().addTextChangedListener(watch);
-        editTextPassword.getEditText().addTextChangedListener(watch);
         editTextSchool.getEditText().addTextChangedListener(watch);
     }
 
@@ -130,12 +134,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
+        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+        startActivity(intent);
     }
 
-    void registerUser(){
 
     /**Retrofit create operation*/
 
+    void registerUser(){
         Call<DefaultResponse> call = RetrofitClient
                 .getInstance()
                 .getApi()

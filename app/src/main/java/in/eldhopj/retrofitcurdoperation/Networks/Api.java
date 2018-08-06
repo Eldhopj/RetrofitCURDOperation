@@ -1,6 +1,7 @@
 package in.eldhopj.retrofitcurdoperation.Networks;
 
 import in.eldhopj.retrofitcurdoperation.ModelClass.DefaultResponse;
+import in.eldhopj.retrofitcurdoperation.ModelClass.LoginResponse;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -8,10 +9,6 @@ import retrofit2.http.POST;
 
 public interface Api {
 
-    /**
-     *
-     * CreateUser() -> Function
-     *  */
     @FormUrlEncoded
     @POST("createuser") //createuser -> Endpoint
     /*<DefaultResponse> -> This call will return us an object of DefaultResponse
@@ -21,5 +18,12 @@ public interface Api {
             @Field("password") String password,
             @Field("name") String name,
             @Field("school") String school
+    );
+
+    @FormUrlEncoded
+    @POST("userlogin")
+    Call<LoginResponse> userLogin(
+            @Field("email") String email,
+            @Field("password") String password
     );
 }
