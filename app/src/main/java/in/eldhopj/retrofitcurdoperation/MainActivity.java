@@ -31,9 +31,13 @@ import retrofit2.Response;
  *
  * Commit 2: User Login
  *          Create POST request for login (Api)
- *          Store the user details in memory using shared prefs
+ *          Store the user details in memory using shared prefs (SharedPrefsManager) <New/>
  *          Create Model class for parsing the Login response as well as for shared prefs (LoginResponse)
  *          If user is already logged in autoLogin into profile activity
+ *
+ * Commit 3: Verify user is logged or not, if not send user back to login activity (ProfileActivity)
+ *          Bottom Navigation
+ *          On HomeFragment display the current users details
  *          */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
