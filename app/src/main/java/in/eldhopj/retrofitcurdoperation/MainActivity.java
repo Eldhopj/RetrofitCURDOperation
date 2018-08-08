@@ -38,6 +38,9 @@ import retrofit2.Response;
  * Commit 3: Verify user is logged or not, if not send user back to login activity (ProfileActivity)
  *          Bottom Navigation
  *          On HomeFragment display the current users details
+ *
+ * Commit 4: Get all users using GET request
+ *          Displaying all users in using RecyclerView in PeopleFragment
  *          */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";

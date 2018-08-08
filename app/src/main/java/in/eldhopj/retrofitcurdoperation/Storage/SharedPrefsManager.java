@@ -3,7 +3,7 @@ package in.eldhopj.retrofitcurdoperation.Storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import in.eldhopj.retrofitcurdoperation.ModelClass.LoginResponse;
+import in.eldhopj.retrofitcurdoperation.ModelClass.User;
 
 /**SharedPrefsManager is to save an retrieve data from shared prefs*/
 
@@ -28,7 +28,7 @@ public class SharedPrefsManager {
     /**
      * saving user info into shared prefs
      */
-    public void saveUser(LoginResponse.User user) {
+    public void saveUser(User user) {
 
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -52,9 +52,9 @@ public class SharedPrefsManager {
     /**
      * Getting the user info from shared prefs
      */
-    public LoginResponse.User getUser() {
+    public User getUser() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        LoginResponse.User user = new LoginResponse.User(
+        User user = new User(
                 sharedPreferences.getInt("id", -1),
                 sharedPreferences.getString("email", null),
                 sharedPreferences.getString("name", null),
