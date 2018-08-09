@@ -8,6 +8,8 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 public interface Api {
 
@@ -31,4 +33,21 @@ public interface Api {
 
     @GET("allusers")
     Call<UsersResponse> getUsers();
+
+    @FormUrlEncoded
+    @PUT("updateuser/{id}") // Give the user ID we wanna update, {} -> Dynamic url
+    Call<LoginResponse> updateUser( // We are using login response because both's fields are same
+            @Path("id") int id,
+            @Field("email") String email,
+            @Field("name") String name,
+            @Field("school") String school
+    );
+
+    @FormUrlEncoded
+    @PUT("updatepassword")
+    Call<DefaultResponse> updatePassword(
+            @Field("currentpassword") String currentPassword,
+            @Field("newpassword") String newPassword,
+            @Field("email") String email
+    );
 }

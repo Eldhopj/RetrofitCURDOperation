@@ -41,6 +41,8 @@ import retrofit2.Response;
  *
  * Commit 4: Get all users using GET request
  *          Displaying all users in using RecyclerView in PeopleFragment
+ *
+ * Commit 5: Update user profiles, Update password using GET request (Settings Fragment)
  *          */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
