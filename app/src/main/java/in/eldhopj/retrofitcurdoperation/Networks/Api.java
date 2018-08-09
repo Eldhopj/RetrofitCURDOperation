@@ -4,6 +4,7 @@ import in.eldhopj.retrofitcurdoperation.ModelClass.DefaultResponse;
 import in.eldhopj.retrofitcurdoperation.ModelClass.LoginResponse;
 import in.eldhopj.retrofitcurdoperation.ModelClass.UsersResponse;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -49,5 +50,10 @@ public interface Api {
             @Field("currentpassword") String currentPassword,
             @Field("newpassword") String newPassword,
             @Field("email") String email
+    );
+
+    @DELETE("deleteuser/{id}")
+    Call<DefaultResponse> deleteUser(
+            @Path("id") int id
     );
 }

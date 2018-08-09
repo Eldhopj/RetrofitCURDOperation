@@ -42,17 +42,21 @@ import retrofit2.Response;
  * Commit 4: Get all users using GET request
  *          Displaying all users in using RecyclerView in PeopleFragment
  *
- * Commit 5: Update user profiles, Update password using GET request (Settings Fragment)
+ * Commit 5: Update user profiles
+ *          Update password using PUT request (Settings Fragment)
+ *
+ * Commit 6: Delete user using @DELETE,
+ *          Logout user
  *          */
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
+public class RegisterActivity extends AppCompatActivity {
+    private static final String TAG = "RegisterActivity";
     private TextInputLayout editTextEmail, editTextPassword, editTextName, editTextSchool;
     String name,emailID,password,school;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);

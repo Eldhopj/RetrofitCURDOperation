@@ -1,10 +1,13 @@
 package in.eldhopj.retrofitcurdoperation.Fragments;
 
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -12,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import in.eldhopj.retrofitcurdoperation.LoginActivity;
 import in.eldhopj.retrofitcurdoperation.ModelClass.DefaultResponse;
 import in.eldhopj.retrofitcurdoperation.ModelClass.LoginResponse;
 import in.eldhopj.retrofitcurdoperation.ModelClass.User;
@@ -66,11 +70,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 updatePassword(); // Update password
                 break;
             case R.id.buttonLogout:
+                logoutUser(); //Logout user
                 break;
             case R.id.buttonDelete:
+                deleteUser(); // Delete user
                 break;
         }
     }
+
 
     private void updateProfile() {
         String email = editTextEmail.getText().toString().trim();
@@ -158,7 +165,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback<DefaultResponse>() {
             @Override
             public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
-                Log.d(TAG, "onResponse: "+response.body().getMessage());
+                DefaultResponse defaultResponse = response.body();
+                Log.d(TAG, "onResponse: "+defaultResponse.getMessage());
             }
 
             @Override
@@ -166,5 +174,55 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "onFailure: "+t.getMessage());
             }
         });
+    }
+
+    /**User Logout*/
+    private void logoutUser() {
+        SharedPrefsManager.getInstance(getActivity()).clear();
+        Intent intent = new Intent(getActivity(),LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);//We need to close all the existing activity because we don't want our user to navigate back on backButton press
+        startActivity(intent);
+    }
+
+    private void deleteUser(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Confirm Delete...");
+        alertDialog.setMessage("Are you sure you want delete this?");
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog,int which) {
+
+                /**Delete user*/
+
+                User user = SharedPrefsManager.getInstance(getActivity()).getUser(); // for to get the email ID
+                Call<DefaultResponse> call = RetrofitClient.getInstance().getApi()
+                        .deleteUser(user.getId()); //gets ID from the shared prefs
+                call.enqueue(new Callback<DefaultResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                        DefaultResponse defaultResponse = response.body();
+                        if (!defaultResponse.isError()) { // If flag is false , ie delete successful
+                            logoutUser(); // delete the data's in shared prefs
+                        }
+                        Log.d(TAG, "onResponse: "+defaultResponse.getMessage());
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: "+t.getMessage());
+                    }
+                });
+            }
+        });
+
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Write your code here to invoke NO event
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
     }
 }
