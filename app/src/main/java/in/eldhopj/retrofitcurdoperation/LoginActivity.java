@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Toast;
 
 import in.eldhopj.retrofitcurdoperation.ModelClass.LoginResponse;
 import in.eldhopj.retrofitcurdoperation.Networks.RetrofitClient;
@@ -115,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                     }else {
                         Log.d(TAG, "onResponse: "+loginResponse.getMessage());
                     }
+                    Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }

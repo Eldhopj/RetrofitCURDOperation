@@ -47,7 +47,8 @@ import retrofit2.Response;
  *
  * Commit 6: Delete user using @DELETE,
  *          Logout user
- *          */
+ *
+ * Commit 7: Added basic auth to prevent misuse of API*/
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
     private TextInputLayout editTextEmail, editTextPassword, editTextName, editTextSchool;
