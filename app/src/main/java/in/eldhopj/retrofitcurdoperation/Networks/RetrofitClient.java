@@ -2,6 +2,9 @@ package in.eldhopj.retrofitcurdoperation.Networks;
 
 import android.util.Base64;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -45,14 +48,19 @@ public class RetrofitClient {
        /**HttpLoggingInterceptor is used to log the data during the network call.*/
 //        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 //        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-//        httpClient.addInterceptor(logging);
+//        OkHttpClient httpClient = new OkHttpClient.Builder()
+//                .addInterceptor(logging)
+//                .build();
+
+    /**If we want to sending null values in empty fields*/
+    Gson gson = new GsonBuilder().serializeNulls().create();
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+//                .addConverterFactory(GsonConverterFactory.create(gson)) // for serialize Nulls
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient) //Send the header with all the requests NOTE : use this if we using HTTP inspector
-//                .client(httpClient.build())
+//                .client(httpClient) //HttpLoggingInterceptor
                 .build();
     }
 
