@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import retrofit2.Response;
 public class PeopleFragment extends Fragment{ //Implement the OnItemClickListener interface
 
     private static final String TAG = "PeopleFragment";
+    ProgressDialog progressDialog;
 
     public PeopleFragment() {
         // Required empty public constructor
@@ -47,38 +49,40 @@ public class PeopleFragment extends Fragment{ //Implement the OnItemClickListene
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mUserList = new ArrayList<>();//Inside this list item we get all our values
+        initRecyclerView(view,mUserList);
+
         //Progress dialog
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCancelable(false); // set cancelable to false
         progressDialog.setMessage("Please Wait..."); // set message
         progressDialog.show();// show progress dialog
 
+        getPeopleList();
+    }
 
-        //binding recyclerView
-        mRecyclerView = view.findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true); // setting it to true allows some optimization to our view , avoiding validations when mAdapter content changes
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); //it can be GridLayoutManager or StaggeredGridLayoutManager
-
-
+    private void getPeopleList() {
         /**Fetching all users using @GET request*/
         Call<UsersResponse> call = RetrofitClient.getInstance().getApi().getUsers();
         call.enqueue(new Callback<UsersResponse>() {
             @Override
             public void onResponse(Call<UsersResponse> call, Response<UsersResponse> response) {
-                mUserList = new ArrayList<>();//Inside this list item we get all our values
+
+                if (!response.isSuccessful()) { // Prevents error like 404
+                    Toast.makeText(getActivity(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 UsersResponse usersResponse = response.body();// The response come here as JSON
 
                 if (!(usersResponse.getError()));// Error flag outside the ArrayList, to check if there is any error or not
                 {
                     mUserList = usersResponse.getUsers();// All the data which gets from server is stored in the array list
                     progressDialog.dismiss(); //dismiss progress dialog
-                    //set the mAdapter to the recycler view
-                    mAdapter = new Adapter(mUserList, getActivity());
-                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();//Notify  data change to mAdapter
                 }
 
                 //Handling Onclick
@@ -97,6 +101,18 @@ public class PeopleFragment extends Fragment{ //Implement the OnItemClickListene
                 progressDialog.dismiss(); //dismiss progress dialog
             }
         });
+    }
 
+    private void initRecyclerView(View view,List<User> listItems){
+        /**bind with xml*/
+        mRecyclerView = view.findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true); // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false)); //it can be GridLayoutManager or StaggeredGridLayoutManager
+
+        /**set the mRecyclerAdapter to the recycler view*/
+        mAdapter = new Adapter(listItems, getActivity());
+//      mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
+        mRecyclerView.setAdapter(mAdapter);
     }
 }

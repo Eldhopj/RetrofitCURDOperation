@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +21,7 @@ import in.eldhopj.retrofitcurdoperation.Networks.RetrofitClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+/**retrofit provides an abstraction layer over HTTP calls and automatically generate all the necessary codes*/
 /**
  * Commit 1:Sign Up using Retrofit POST Request
  *          Create an API interface (Api)
@@ -165,6 +166,10 @@ public class RegisterActivity extends AppCompatActivity {
         call.enqueue(new Callback<DefaultResponse>() {
             @Override
             public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                if (!response.isSuccessful()) { // Prevents error like 404
+                    Toast.makeText(getApplicationContext(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(response.body() !=null) {
                     if (response.code() == 201) { //201 is defined in the API code for successive creation of user
                         /**Parsing JSON in GSON way*/

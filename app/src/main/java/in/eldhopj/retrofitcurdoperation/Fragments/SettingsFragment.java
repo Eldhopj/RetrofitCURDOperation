@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import in.eldhopj.retrofitcurdoperation.LoginActivity;
 import in.eldhopj.retrofitcurdoperation.ModelClass.DefaultResponse;
@@ -123,6 +124,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (!response.isSuccessful()) { // Prevents error like 404
+                    Toast.makeText(getActivity(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (!(response.body().getError())){ // If there is no error
                     // Get new user response from server and save it into shared prefs
                     SharedPrefsManager.getInstance(getActivity()).saveUser(response.body().getUser());
@@ -165,6 +170,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback<DefaultResponse>() {
             @Override
             public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                if (!response.isSuccessful()) { // Prevents error like 404
+                    Toast.makeText(getActivity(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 DefaultResponse defaultResponse = response.body();
                 Log.d(TAG, "onResponse: "+defaultResponse.getMessage());
             }
@@ -199,6 +208,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 call.enqueue(new Callback<DefaultResponse>() {
                     @Override
                     public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
+                        if (!response.isSuccessful()) { // Prevents error like 404
+                            Toast.makeText(getActivity(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         DefaultResponse defaultResponse = response.body();
                         if (!defaultResponse.isError()) { // If flag is false , ie delete successful
                             logoutUser(); // delete the data's in shared prefs

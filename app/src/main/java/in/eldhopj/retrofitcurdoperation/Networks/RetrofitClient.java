@@ -21,6 +21,7 @@ public class RetrofitClient {
 
     //Inside this constructor we initialize the retrofit object
     private RetrofitClient() {
+        //HTTP inspector start here
         /*Create basic auth and send it via header
         * This header is added to all the request calls */
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -39,11 +40,19 @@ public class RetrofitClient {
                         return chain.proceed(request); // Pass the new request
                     }
                 })
-                .build();
+                .build(); //HTTP inspector ends here
+
+       /**HttpLoggingInterceptor is used to log the data during the network call.*/
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+//        httpClient.addInterceptor(logging);
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient) //Send the header with all the requests
+                .client(okHttpClient) //Send the header with all the requests NOTE : use this if we using HTTP inspector
+//                .client(httpClient.build())
                 .build();
     }
 

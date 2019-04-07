@@ -101,6 +101,10 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (!response.isSuccessful()) { // Prevents error like 404
+                    Toast.makeText(getApplicationContext(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (response.body() != null){
                     LoginResponse loginResponse = response.body();
                     if (!loginResponse.getError()){ // if error flag is false proceed else display the message
