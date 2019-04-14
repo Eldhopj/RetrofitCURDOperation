@@ -47,7 +47,11 @@ public class RetrofitClient {
 
        /**HttpLoggingInterceptor is used to log the data during the network call.*/
 //        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        if (BuildConfig.DEBUG) {
+//            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        } else {
+//            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+//        }
 //        OkHttpClient httpClient = new OkHttpClient.Builder()
 //                .addInterceptor(logging)
 //                .build();

@@ -20,6 +20,7 @@ import java.util.List;
 import in.eldhopj.retrofitcurdoperation.Adapter;
 import in.eldhopj.retrofitcurdoperation.ModelClass.User;
 import in.eldhopj.retrofitcurdoperation.ModelClass.UsersResponse;
+import in.eldhopj.retrofitcurdoperation.Networks.NetworkUtility;
 import in.eldhopj.retrofitcurdoperation.Networks.RetrofitClient;
 import in.eldhopj.retrofitcurdoperation.R;
 import retrofit2.Call;
@@ -72,13 +73,19 @@ public class PeopleFragment extends Fragment{ //Implement the OnItemClickListene
             public void onResponse(Call<UsersResponse> call, Response<UsersResponse> response) {
 
                 if (!response.isSuccessful()) { // Prevents error like 404
-                    Toast.makeText(getActivity(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onResponse: "+ response.code());
+
+                    //NOTE : check response codes for better message  :- https://www.restapitutorial.com/httpstatuscodes.html
+                    if(response.code() == 504) { // 504 -  Gateway Timeout
+                        Toast.makeText(getContext(), "Can't load data.\\nCheck your network connection.", Toast.LENGTH_SHORT).show();
+                    }
+                    progressDialog.dismiss(); //dismiss progress dialog
                     return;
                 }
 
                 UsersResponse usersResponse = response.body();// The response come here as JSON
 
-                if (!(usersResponse.getError()));// Error flag outside the ArrayList, to check if there is any error or not
+                if (!(usersResponse.getError()))// Error flag outside the ArrayList, to check if there is any error or not
                 {
                     mUserList = usersResponse.getUsers();// All the data which gets from server is stored in the array list
                     progressDialog.dismiss(); //dismiss progress dialog
@@ -97,8 +104,13 @@ public class PeopleFragment extends Fragment{ //Implement the OnItemClickListene
 
             @Override
             public void onFailure(Call<UsersResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: "+t.getMessage());
+                Log.d(TAG, "onFailure: "+t.getCause());
                 progressDialog.dismiss(); //dismiss progress dialog
+                if (!call.isCanceled()){
+                    if(NetworkUtility.isKnownException(t)){
+                        Toast.makeText(getContext(), "Can't load data.\nCheck your network connection.", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }

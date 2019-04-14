@@ -20,6 +20,7 @@ import in.eldhopj.retrofitcurdoperation.LoginActivity;
 import in.eldhopj.retrofitcurdoperation.ModelClass.DefaultResponse;
 import in.eldhopj.retrofitcurdoperation.ModelClass.LoginResponse;
 import in.eldhopj.retrofitcurdoperation.ModelClass.User;
+import in.eldhopj.retrofitcurdoperation.Networks.NetworkUtility;
 import in.eldhopj.retrofitcurdoperation.Networks.RetrofitClient;
 import in.eldhopj.retrofitcurdoperation.R;
 import in.eldhopj.retrofitcurdoperation.Storage.SharedPrefsManager;
@@ -125,7 +126,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (!response.isSuccessful()) { // Prevents error like 404
-                    Toast.makeText(getActivity(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onResponse: "+ response.code());
+
+                    //NOTE : check response codes for better message  :- https://www.restapitutorial.com/httpstatuscodes.html
+                    if(response.code() == 504) { // 504 -  Gateway Timeout
+                        Toast.makeText(getContext(), "Can't load data.\\nCheck your network connection.", Toast.LENGTH_SHORT).show();
+                    }
                     return;
                 }
                 if (!(response.body().getError())){ // If there is no error
@@ -137,7 +143,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: "+t.getMessage());
+                Log.d(TAG, "onFailure: "+t.getCause());
+                if (!call.isCanceled()){
+                    if(NetworkUtility.isKnownException(t)){
+                        Toast.makeText(getContext(), "Can't load data.\nCheck your network connection.", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
@@ -171,16 +182,27 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                 if (!response.isSuccessful()) { // Prevents error like 404
-                    Toast.makeText(getActivity(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onResponse: "+ response.code());
+
+                    //NOTE : check response codes for better message  :- https://www.restapitutorial.com/httpstatuscodes.html
+                    if(response.code() == 504) { // 504 -  Gateway Timeout
+                        Toast.makeText(getContext(), "Can't load data.\\nCheck your network connection.", Toast.LENGTH_SHORT).show();
+                    }
                     return;
                 }
+
                 DefaultResponse defaultResponse = response.body();
                 Log.d(TAG, "onResponse: "+defaultResponse.getMessage());
             }
 
             @Override
             public void onFailure(Call<DefaultResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: "+t.getMessage());
+                Log.d(TAG, "onFailure: "+t.getCause());
+                if (!call.isCanceled()){
+                    if(NetworkUtility.isKnownException(t)){
+                        Toast.makeText(getContext(), "Can't load data.\nCheck your network connection.", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
@@ -209,7 +231,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onResponse(Call<DefaultResponse> call, Response<DefaultResponse> response) {
                         if (!response.isSuccessful()) { // Prevents error like 404
-                            Toast.makeText(getActivity(), "Code : " + response.code(), Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onResponse: "+ response.code());
+
+                            //NOTE : check response codes for better message  :- https://www.restapitutorial.com/httpstatuscodes.html
+                            if(response.code() == 504) { // 504 -  Gateway Timeout
+                                Toast.makeText(getContext(), "Can't load data.\\nCheck your network connection.", Toast.LENGTH_SHORT).show();
+                            }
                             return;
                         }
                         DefaultResponse defaultResponse = response.body();
@@ -221,7 +248,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void onFailure(Call<DefaultResponse> call, Throwable t) {
-                        Log.d(TAG, "onFailure: "+t.getMessage());
+                        Log.d(TAG, "onFailure: "+t.getCause());
+                        if (!call.isCanceled()){
+                            if(NetworkUtility.isKnownException(t)){
+                                Toast.makeText(getContext(), "Can't load data.\nCheck your network connection.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                 });
             }
